@@ -1,0 +1,223 @@
+{
+    "res": {
+        "migrate:page/channeldb.tpl": {
+            "uri": "migrate/page/channeldb.tpl",
+            "type": "tpl",
+            "extras": {
+                "isPage": true
+            },
+            "subpath": "/views/migrate/page/channeldb.tpl"
+        },
+        "migrate:page/index.tpl": {
+            "uri": "migrate/page/index.tpl",
+            "type": "tpl",
+            "extras": {
+                "isPage": true
+            },
+            "subpath": "/views/migrate/page/index.tpl"
+        },
+        "migrate:page/layout.tpl": {
+            "uri": "migrate/page/layout.tpl",
+            "type": "tpl",
+            "extras": {
+                "isPage": true
+            },
+            "subpath": "/views/migrate/page/layout.tpl"
+        },
+        "migrate:page/metadata.tpl": {
+            "uri": "migrate/page/metadata.tpl",
+            "type": "tpl",
+            "extras": {
+                "isPage": true
+            },
+            "subpath": "/views/migrate/page/metadata.tpl"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/css/bootstrap-theme.css": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap-theme_561f998.css",
+            "type": "css",
+            "extras": {},
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap-theme_561f998.css"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap-theme.min_7fbe52c.css",
+            "type": "css",
+            "extras": {},
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap-theme.min_7fbe52c.css"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/css/bootstrap.css": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap_9c743a9.css",
+            "type": "css",
+            "extras": {},
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap_9c743a9.css"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/css/bootstrap.min.css": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap.min_049b311.css",
+            "type": "css",
+            "extras": {},
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/css/bootstrap.min_049b311.css"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/js/bootstrap.js": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/js/bootstrap_5a8a231.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/js/bootstrap_5a8a231.js"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/js/bootstrap.min.js": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/js/bootstrap.min_97eeba0.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/js/bootstrap.min_97eeba0.js"
+        },
+        "migrate:static/bootstrap-3.3.7-dist/js/npm.js": {
+            "uri": "/static/migrate/static/bootstrap-3.3.7-dist/js/npm_8c110a3.js",
+            "type": "js",
+            "deps": [
+                "../../js/transition.js",
+                "../../js/alert.js",
+                "../../js/button.js",
+                "../../js/carousel.js",
+                "../../js/collapse.js",
+                "../../js/dropdown.js",
+                "../../js/modal.js",
+                "../../js/tooltip.js",
+                "../../js/popover.js",
+                "../../js/scrollspy.js",
+                "../../js/tab.js",
+                "../../js/affix.js"
+            ],
+            "subpath": "/static/migrate/static/bootstrap-3.3.7-dist/js/npm_8c110a3.js"
+        },
+        "migrate:static/js/bigpipe.js": {
+            "uri": "/static/migrate/static/js/bigpipe_e458691.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/js/bigpipe_e458691.js"
+        },
+        "migrate:static/js/index.js": {
+            "uri": "/static/migrate/static/js/index_d41d8cd.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/js/index_d41d8cd.js"
+        },
+        "migrate:static/js/jquery-1.12.4.min.js": {
+            "uri": "/static/migrate/static/js/jquery-1.12.4.min_12cef10.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/js/jquery-1.12.4.min_12cef10.js"
+        },
+        "migrate:static/js/lazyload.js": {
+            "uri": "/static/migrate/static/js/lazyload_80d4f78.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/js/lazyload_80d4f78.js"
+        },
+        "migrate:static/js/mod.js": {
+            "uri": "/static/migrate/static/js/mod_75d1f98.js",
+            "type": "js",
+            "subpath": "/static/migrate/static/js/mod_75d1f98.js"
+        },
+        "migrate:static/js/page.js": {
+            "uri": "/static/migrate/static/js/page_d27dd51.js",
+            "type": "js",
+            "deps": [
+                "migrate:static/js/bigpipe.js"
+            ],
+            "subpath": "/static/migrate/static/js/page_d27dd51.js"
+        },
+        "migrate:widget/channeldb/channeldb.jes": {
+            "uri": "/static/migrate/widget/channeldb/channeldb.js",
+            "type": "js",
+            "subpath": "/static/migrate/widget/channeldb/channeldb.js"
+        },
+        "migrate:widget/channeldb/channeldb.less": {
+            "uri": "/static/migrate/widget/channeldb/channeldb_d20ba69.css",
+            "type": "css",
+            "subpath": "/static/migrate/widget/channeldb/channeldb_d20ba69.css"
+        },
+        "migrate:widget/channeldb/channeldb.tpl": {
+            "uri": "migrate/widget/channeldb/channeldb.tpl",
+            "type": "tpl",
+            "deps": [
+                "./channeldb.js",
+                "migrate:widget/channeldb/channeldb.less",
+                "migrate:widget/channeldb/channeldb.jes"
+            ],
+            "subpath": "/views/migrate/widget/channeldb/channeldb.tpl"
+        },
+        "migrate:widget/header/header.jes": {
+            "uri": "/static/migrate/widget/header/header.js",
+            "type": "js",
+            "subpath": "/static/migrate/widget/header/header.js"
+        },
+        "migrate:widget/header/header.less": {
+            "uri": "/static/migrate/widget/header/header_9c087b6.css",
+            "type": "css",
+            "subpath": "/static/migrate/widget/header/header_9c087b6.css"
+        },
+        "migrate:widget/header/header.tpl": {
+            "uri": "migrate/widget/header/header.tpl",
+            "type": "tpl",
+            "deps": [
+                "./header.js",
+                "migrate:widget/header/header.less",
+                "migrate:widget/header/header.jes"
+            ],
+            "subpath": "/views/migrate/widget/header/header.tpl"
+        },
+        "migrate:widget/menu/menu.jes": {
+            "uri": "/static/migrate/widget/menu/menu.js",
+            "type": "js",
+            "subpath": "/static/migrate/widget/menu/menu.js"
+        },
+        "migrate:widget/menu/menu.less": {
+            "uri": "/static/migrate/widget/menu/menu_245f221.css",
+            "type": "css",
+            "subpath": "/static/migrate/widget/menu/menu_245f221.css"
+        },
+        "migrate:widget/menu/menu.tpl": {
+            "uri": "migrate/widget/menu/menu.tpl",
+            "type": "tpl",
+            "deps": [
+                "./menu.js",
+                "migrate:widget/menu/menu.less",
+                "migrate:widget/menu/menu.jes"
+            ],
+            "subpath": "/views/migrate/widget/menu/menu.tpl"
+        },
+        "migrate:widget/metadata/metadata.jes": {
+            "uri": "/static/migrate/widget/metadata/metadata.js",
+            "type": "js",
+            "subpath": "/static/migrate/widget/metadata/metadata.js"
+        },
+        "migrate:widget/metadata/metadata.less": {
+            "uri": "/static/migrate/widget/metadata/metadata_66ccfe9.css",
+            "type": "css",
+            "subpath": "/static/migrate/widget/metadata/metadata_66ccfe9.css"
+        },
+        "migrate:widget/metadata/metadata.tpl": {
+            "uri": "migrate/widget/metadata/metadata.tpl",
+            "type": "tpl",
+            "deps": [
+                "./metadata.js",
+                "migrate:widget/metadata/metadata.less",
+                "migrate:widget/metadata/metadata.jes"
+            ],
+            "subpath": "/views/migrate/widget/metadata/metadata.tpl"
+        },
+        "migrate:widget/search/search.jes": {
+            "uri": "/static/migrate/widget/search/search.js",
+            "type": "js",
+            "subpath": "/static/migrate/widget/search/search.js"
+        },
+        "migrate:widget/search/search.less": {
+            "uri": "/static/migrate/widget/search/search_e7e0735.css",
+            "type": "css",
+            "subpath": "/static/migrate/widget/search/search_e7e0735.css"
+        },
+        "migrate:widget/search/search.tpl": {
+            "uri": "migrate/widget/search/search.tpl",
+            "type": "tpl",
+            "deps": [
+                "./search.js",
+                "migrate:widget/search/search.less",
+                "migrate:widget/search/search.jes"
+            ],
+            "subpath": "/views/migrate/widget/search/search.tpl"
+        }
+    },
+    "pkg": {}
+}

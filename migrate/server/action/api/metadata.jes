@@ -1,0 +1,28 @@
+/**
+ * @file: metadata.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import * as DB from '../../model/';
+import  serviceMetadata from '../../service/metadata';
+
+
+export function get(req, res){
+   DB.modelMetadata.getlist(req.query,function(err, results, fields){
+       res.send(JSON.stringify(results));
+   })
+}
+export function post(req, res) {
+    let detail = JSON.parse(req.body.detail);
+    serviceMetadata.migrate(detail, req.body.desc, function(err, data){
+        if(err){
+            res.json(err);
+            return;
+        }
+        res.json(data); 
+    });
+
+}
+/* eslint-enable */

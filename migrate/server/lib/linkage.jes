@@ -1,0 +1,49 @@
+/**
+ * @file: linkage.js
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-27
+ * @description: this is a <js> file
+ */
+/* eslint-disable */
+
+
+
+/**
+ * @desc 从home模块外链过来的模块
+ */
+
+let mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise
+
+
+/**
+ * @desc 生成ids表用来储存自增ID
+ */
+let Schema = mongoose.Schema;
+let IdsSchema = new Schema({
+    _id: String,
+    len: Number
+});
+let MenuId;
+try{
+    MenuId = mongoose.model('id', IdsSchema);
+}catch(e){
+    MenuId = mongoose.model('id');
+}
+
+
+
+
+
+import {
+    Menu, Database, Metadata, Dict, User
+}
+from '../../home/model/schema';
+
+import MySQL from '../../home/lib/dao/mysql';
+
+export {
+    Menu, Database, Metadata, Dict, User, MySQL, MenuId
+}
+/* eslint-enable */

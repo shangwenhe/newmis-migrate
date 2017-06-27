@@ -1,0 +1,93 @@
+/**
+ * @file: search.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+let searchlist = __inline('./search.list.tmpl');
+$('#search').on('click', function() {
+    let id = $('#searchId').val();
+    let hasChilde = $('#hasChilde:checked').length;
+
+    $.ajax({
+        url: '/migrate/searchprivilege',
+        type: 'GET',
+        data: {
+            id,
+            hasChilde
+        },
+        dataType: 'JSON',
+        success: function(data) {
+            console.log(data)
+            $('#searchList').html(searchlist(data))
+        }
+    })
+});
+
+
+$('#searchList').on('change', 'input[type=checkbox]', function() {
+    let checked = $(this).is(':checked');
+    // 向上选择
+    if (checked) {
+        let parentid = $(this).attr('data-parentId');
+        $('#' + parentid).prop('checked', true).change();
+    } else {}
+    // 向下选择
+    if (checked) {} else {
+        let id = $(this).attr('id');
+        $('input[data-parentId=' + id + ']').prop('checked', false).change();
+    }
+})
+
+
+
+
+
+$('#searchList').on('click', '#submit', function() {
+    let info = [];
+    let checked = $('#searchList').find('input:checked').each(function(index, item) {
+        info.push(parseInt($(item).attr('id')));
+    });
+
+    let parentNode = $('.menu-wrap .dropdown-toggle').data('detail');
+
+    if(info.length == 0){
+        alert('请选择需要迁移的数据');
+        return;
+    }
+    let detail = JSON.parse($('.list-for-old-mis').attr('data-detail'));
+    
+    (function loop(data) {
+        $.each(data, function(index, item) {
+            if (item && info.indexOf(item.id) > -1) {
+                item['selected'] = true;
+                loop(item.children)
+            } else {
+                data.splice(index,1);
+                loop(data);
+                return false;
+            }
+        })
+    }(detail));
+    
+
+    $.ajax({
+        url: '/migrate/block',
+        type: 'POST',
+        data: {
+            blocks: JSON.stringify(detail),
+            parentNode: JSON.stringify(parentNode)
+        },
+        success: function(data){
+            console.log(data)
+        }
+    })
+});
+
+$('#searchList').on('change', '#selectall', function() {
+    $('li input[type=checkbox]').prop('checked', true);
+});
+
+/* eslint-enable */

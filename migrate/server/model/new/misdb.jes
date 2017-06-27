@@ -1,0 +1,31 @@
+/**
+ * @file: misdb.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-02
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import {
+    Menu, Database, Metadata
+}
+from '../../lib/linkage';
+class modelNewMisdb {
+
+    /**
+     * @desc 通过old mis id查找是否已经被迁移过
+     */
+    find({host, port, username}, callback) {
+        Database.find({
+            host, port, username
+        }).exec(callback);
+    }
+
+    create(cond, callback){
+        let database = new Database(cond);
+        database.save(callback);
+    }
+
+}
+
+export default new modelNewMisdb;
+/* eslint-enable */

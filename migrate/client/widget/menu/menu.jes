@@ -1,0 +1,30 @@
+/**
+ * @file: menu.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-02
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+let menulist = __inline('./menu.list.tmpl');
+
+$.ajax({
+    url: 'http://imis.xiaodutv.com/api/setting/menu',
+    type: 'GET',
+    dataType: 'JSON',
+    success: function(info) {
+        $('.menu-list').replaceWith(menulist(info.data))
+    },
+    error: function(err) {
+           
+    }
+});
+
+$('.menu-wrap').on('click','.list-group li', function(e){
+    let detail = $(this).data('detail');
+    let button =  $(this).parents('.menu-wrap').find('.btn-default')
+    button.html(detail.name+ '<span class="caret"></span>')
+    button.data({detail});
+});
+
+/* eslint-enable */

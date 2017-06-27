@@ -1,0 +1,45 @@
+/**
+ * @file: deliver.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import mysql from '../../lib/mysql';
+import phpsrlzr from '../../lib/php-srlzr';
+class modelDeliver extends mysql {
+    constructor() {
+        super();
+        /**
+         * @desc 顶级菜单
+         */
+        this.table = 'mis_deliver';
+    }
+    buffer(arr){
+        let buffer = (new Buffer(arr)).toString('utf-8');
+        return phpsrlzr.deserialize(buffer);
+        
+    }
+    getlist({fields = '*', where = '', order = '', limit = 'limit 10'}, callback) {
+        this.select({
+            table: this.table,
+            fields,
+            where,
+            order,
+            limit
+        }, (err, result, fields) => {
+            
+            callback(err, result.map((value, index) => {
+                        
+                    value.layout_params = value.layout_params && this.buffer(value.layout_params) || '';
+                    value.load_params = value.load_params && this.buffer(value.load_params) || '';
+                    value.sender_params = value.sender_params && this.buffer(value.sender_params) || '';
+                    return value;
+                
+            }), fields);
+        })
+    }
+}
+
+export default new modelDeliver;
+/* eslint-enable */

@@ -1,0 +1,35 @@
+/**
+ * @file: block.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+import serviceBlock from '../service/block';
+import modelNewMismenu from '../model/new/mismenu';
+
+export function post (req, res){
+    // 取出提交过来的数据
+    let blocks = JSON.parse(req.body.blocks);
+    
+    let parentNode = req.body.parentNode && JSON.parse(req.body.parentNode) || {};
+
+    modelNewMismenu.maxId(function(err, id){
+        // autoId 为索引ID
+        parentNode.autoId = id;
+        serviceBlock.migrate({ blocks, parentNode},function(err, result){
+            if(err){
+                res.json({err});
+                return;
+            }
+            res.json( result)
+        });
+    })
+
+   
+}
+export function get (req, res){
+    res.send('{get:""}')
+}
+/* eslint-enable */

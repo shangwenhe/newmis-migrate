@@ -1,0 +1,64 @@
+<%
+/**
+ * @file: metadata.tmpl
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <tmpl> file
+ */
+%>
+
+
+<ul class='list-group list-for-old-mis'>
+    <% $.each(data, function(index, item){ %>
+    <li class='list-group-item'>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">元数据详细信息</div>
+            <div class="panel-body">
+                <p><span>id:</span><%= item.id %></p>
+                <p><span>top_ch_spell:</span><%= item.top_ch_spell %></p>
+                <p><span>name:</span><%= item.name %></p>
+                <p><span>spell:</span><%= item.spell %></p>
+                <p><span>data_spell:</span><%= item.data_spell %></p>
+                <p><span>db_id:</span><%= item.db_id %></p>
+                <p><span>type:</span><%= item.type %></p>
+                <p><span>status:</span><%= item.status %></p>
+                <p><span>strategy_spell:</span><%= item.strategy_spell %></p>
+            </div>
+            <!-- List group -->
+
+            <ul class="list-group metadata-detail-info">
+                <li class="list-group-item"><b>display_depency</b></li>
+                <% $.each(item.display_depency.edit,function(key, value){ %>
+                <li class="list-group-item"><%= key %> </li>
+                <li class='list-group-item flied'>
+                    <span>dateformat:<%= value.dateformat %></span>
+                    <span>desc:<%= value.desc %></span>
+                    <span>display:<%= value.display %></span>
+                    <span>field:<%= value.field %></span>
+                    <span>height:<%= value.height %></span>
+                    <span>name:<%= value.name %></span>
+                    <span>size:<%= value.size %></span>
+                    <span>tagName:<%= value.tagName %></span>
+                    <span>width:<%= value.width %></span>
+                </li>
+                <%})%>
+            </ul>
+            <ul class="list-group metadata-detail-info">
+                <li class="list-group-item"><b>manager_depency</b></li>
+                <% $.each(item.manager_depency, function(key, value){ %>
+                <li class='list-group-item flied-detail'>
+                    <span><b><%= key %></b> &nbsp; &nbsp; <%= value.join('&nbsp;') %></span>
+                </li>
+                <%})%>
+            </ul>
+            <div class="btn-group migrate-button">
+                <button type="button"
+                    class="btn btn-default btn-submit" 
+                    data-detail='<%= JSON.stringify(item)%>' >确认迁移</button>
+            </div>
+        </div>
+    </li>
+    <%}) %>
+</ul>
+

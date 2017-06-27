@@ -1,0 +1,28 @@
+<%
+/**
+ * @file: channeldb.tmpl
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <tmpl> file
+ */
+%>
+
+<ul class='list-group list-for-old-mis'>
+    <% $.each(data, function(index, item){ %>
+        <% $.each(item, function(key, value){ %>
+        <li class='list-group-item'>
+            <%= key %>:
+            <%= value %>
+        </li>
+        <%}) %>
+        <li class='list-group-item'>
+            <div class="btn-group">
+                <button type="button" 
+                    id='submit' 
+                    class="btn btn-default" 
+                    data-detail='<%= JSON.stringify(item)%>'
+                    >确认迁移</button>
+            </div>
+        </li>
+    <%}) %>
+</ul>

@@ -1,0 +1,52 @@
+/**
+ * @file: MySql.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+let MySql = require('mysql');
+let connection =  MySql.createConnection({
+            host: '10.26.3.189',
+            port: 6151,
+            user: 'ns_cms_mis',
+            password: 'kGdjLang',
+            database: 'db_mis',
+            charset: 'utf8'
+        });
+connection.connect();
+
+
+class mysql {
+    constructor() {
+        this.connection = connection;
+    }
+
+    /**
+     * @desc 格式化 query
+     * @param object
+     *      object table 选择数据表
+     *      object fields 选择的列
+     *      object where 添加选择条件
+     *      object order 排序
+     *      object limit 条数限制
+     * @callback callback
+     */
+    select({
+        table, fields = '*', where = '', order = '', limit = 'limit 10'
+    }, callback = false) {
+        let query = ['select', fields, 'from', table, where, order, limit];
+        console.log(query.join(' '))
+        this.connection.query(query.join(' '), (...args) => {
+            // this.connection.end();
+            callback && callback.apply(null, args);
+        });
+    }
+}
+
+export default  mysql;
+
+
+
+
+/* eslint-enable */

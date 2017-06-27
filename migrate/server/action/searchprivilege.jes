@@ -1,0 +1,26 @@
+/**
+ * @file: searchprivilege.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+import servicePrivilege from '../service/privilege'
+
+export function get(req, res) {
+    let { id, hasChilde } = req.query;
+    /**
+     * @desc 是否包含了节点
+     */
+    servicePrivilege.onlyid(id, function(err, result) {
+        if (parseInt(hasChilde) === 1) {
+            servicePrivilege.getChildren(result[0], function(err, result) {
+                res.json([result]);
+            });
+            return;
+        }
+        res.json(result);
+    });
+}
+/* eslint-enable */

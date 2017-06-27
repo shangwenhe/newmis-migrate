@@ -1,0 +1,52 @@
+/**
+ * @file: channeldb.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+let channeldb = __inline('./channeldb.tmpl');
+
+$('#channeldb').on('click', function() {
+    let channeldbId = $('#channeldbId').val();
+    if (!channeldbId) {
+        alert('没有DBID');
+        return;
+    }
+    let channeldbName = $('#channeldbName').val();
+    if (!channeldbName) {
+        alert('没有DBName');
+        return;
+    }
+    $.ajax({
+        url: '/migrate/api/channeldb',
+        type: 'GET',
+        data: {
+            where: 'where id=\"' + channeldbId + '\" and db_database=\"' + channeldbName + '\"'
+        },
+        dataType: 'JSON',
+        success: function(data) {
+            $('#channeldbList').html(channeldb(data));
+            console.log(data)
+        }
+    })
+
+
+});
+$('#channeldbList').on('click', '#submit', function(){
+
+    let detail = $(this).data('detail');
+    $.ajax({
+        url: '/migrate/api/channeldb',
+        type: 'POST',
+        data: {
+            detail: JSON.stringify(detail)
+        },
+        dataType: 'JSON',
+        success: function(data) {
+        }
+    })
+
+});
+/* eslint-enable */

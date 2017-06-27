@@ -1,0 +1,21 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import modelChanneldb from './old/channeldb';
+import modelMetadata from './old/metadata';
+import modelTopchannel from './old/topchannel';
+import modelDeliver from './old/deliver';
+import modelPrivilege from './old/privilege';
+
+export {
+    modelChanneldb,
+    modelMetadata,
+    modelTopchannel,
+    modelDeliver,
+    modelPrivilege
+}
+/* eslint-enable */

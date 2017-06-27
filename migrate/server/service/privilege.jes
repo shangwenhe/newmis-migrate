@@ -1,0 +1,47 @@
+/**
+ * @file: privilege.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import * as DB from '../model/';
+import async from 'async';
+
+class servicePrivilege {
+    /**
+     * @desc 查询指定ID
+     */
+    onlyid(id, callback) {
+        DB.modelPrivilege.getlist({
+            where: 'where id=' + id
+        }, callback);
+    }
+
+    /**
+     * @desc 从父节点递归查询
+     */
+    getChildren(privilege, callback) {
+
+        DB.modelPrivilege.getlist({
+            where: 'where parent_id=' + privilege.id,
+            limit: 'limit 100'
+        }, (err, list) => {
+            if(list instanceof Array && list.length >0 ){
+                async.mapSeries(list, (item, callback) => {
+                    // 递归查询
+                    this.getChildren(item, callback);
+                }, function(err, datalist) {
+                    privilege.children =   datalist;
+                    callback(err, privilege);
+                })
+            }else{
+                privilege.children =   list;
+                callback(err, privilege)
+            }
+        });
+    }
+}
+
+export default new servicePrivilege;
+/* eslint-enable */

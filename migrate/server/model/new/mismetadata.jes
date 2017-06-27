@@ -1,0 +1,34 @@
+/**
+ * @file: mismetadata.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import {
+    Menu, Database, Metadata
+}
+from '../../lib/linkage';
+class modelNewMismetadata {
+
+    /**
+     * @desc 通过old mis id查找是否已经被迁移过
+     */
+    find(table, callback) {
+        Metadata.find({
+            table_name: table ,
+            is_deleted: false,
+            menu_id: ''
+        }).exec(callback);
+    }
+
+
+    create(cond, callback){
+        let metadata = new Metadata(cond);
+        metadata.save(callback);
+    }
+
+}
+
+export default new modelNewMismetadata;
+/* eslint-enable */

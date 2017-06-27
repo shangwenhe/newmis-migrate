@@ -1,0 +1,26 @@
+/**
+ * @file: db.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import * as DB from '../model/';
+export function channelDB(req, res) {
+    res.render('migrate/page/channeldb.tpl', {});
+}
+export function metaData(req, res) {
+    res.render('migrate/page/metadata.tpl', {});
+}
+export function topChannel(req, res) {
+    DB.modelTopchannel.getlist(req.query, function(err, results, fields) {
+        res.send(JSON.stringify(results));
+    })
+}
+export function privilege(req, res) {
+    DB.modelPrivilege.getlist(req.query, function(err, results, fields) {
+        res.send(JSON.stringify(results));
+    })
+}
+
+    /* eslint-enable */

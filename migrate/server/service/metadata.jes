@@ -1,0 +1,160 @@
+/**
+ * @file: metadata.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import * as Promise from 'bluebird';
+
+import * as DB from '../model/';
+import modelNewMismetadata from '../model/new/mismetadata';
+import modelNewMisdb from '../model/new/misdb';
+import async from 'async';
+
+import { MySQL } from '../lib/linkage';
+
+class serviceMetadata {
+
+    migrate(detail, metadataDesc, callback) {
+        async.waterfall([(callback)=>{
+            /**
+             * @desc  查找元数据是否存在
+             */
+            modelNewMismetadata.find(detail.name, function(err, info){
+                if(err){
+                    callback(err);
+                   return; 
+                }
+                /**
+                 * @desc 如果元数据存在则跳出
+                 */
+                if(!err && info && info.length > 0){
+                    callback({
+                        errno: 100040,
+                        msg: 'metadata '+ detail.name +' exist'
+                    });
+                    return;
+                }
+                callback(null, info);
+            })
+        
+        },(info, callback) => {
+            /**
+             * @desc 查找元数据对应的库的相关信息
+             */
+            DB.modelChanneldb.getlist({
+                where: 'where id=' + detail.db_id
+            }, callback);
+
+        }, (data, field, callback) => {
+
+            let db = data[0];
+            /**
+             * @desc 查找元数据对应的库是否在MIS中存在
+             */
+            modelNewMisdb.find({
+                host: db.db_host,
+                port: db.db_port,
+                username: db.db_user
+            }, function(err, result){
+                if(!err && result.length < 1){
+                    err ={
+                        errno: 100040,
+                        msg: 'datadb '+ db.db_database +' undefined',
+                        info: Object.assign(db,{
+                            db_password: undefined,
+                            db_port: undefined
+                        })
+                    } 
+                }
+                callback(err, result);
+            });
+        }, (data, callback)=>{
+            /**
+             * @desc 从旧MIS中取出数据
+             */
+            DB.modelMetadata.getlist({
+                where: 'where id='+ detail.id +' and name=\''+ detail.name + '\' and top_ch_spell=\'video_publish\' and status=\'A\''
+            }, function(err, field){
+                callback(err, field[0], data[0]);
+            });
+
+
+        }, (field, data, callback)=>{
+
+            let homemysql = new MySQL(data);
+            homemysql.getDesc(detail.name).then((mysqlData) => {
+
+                let schemas = mysqlData.map(function(item){
+                    let key = item['field'];
+                    let desc = field['validate_depency'][key] && field['validate_depency'][key]['name'] || '';
+                    item.desc = desc;
+                    return item; 
+                });
+                let editdepency = field['display_depency']['edit'];
+                let listdepency = field['display_depency']['view'];
+                let edit_conf = Object.keys(field['display_depency']['edit']).map(function(item, key){
+                    if(!editdepency[item]['display']){
+                        return false;
+                    }
+                    let field = item;
+                    let edittype = 'edit-showing-input';
+                    if(/time/.test(field)) {
+                        edittype = 'edit-showing-time';
+                    }
+                    if(/img/.test(field)) {
+                        edittype = 'edit-showing-image-upload';
+                    }
+                    if(/works_id/.test(field)) {
+                        edittype = 'edit-showing-works-input';
+                    }
+
+                    return { field, edittype }; 
+                }).filter((value, index) => value);
+
+                let list_conf = Object.keys(field['display_depency']['view']).map(function(item, key){
+                    if(!listdepency[item]['display']){
+                        return false;
+                    }
+                    let field = item;
+                    let type = 'list-showing-text';
+                    if(/url/.test(field)) {
+                        type = 'list-showing-link';
+                    }
+                    if(/img/.test(field)) {
+                        type = 'list-showing-image';
+                    }
+                    if(/time/.test(field)) {
+                        type = 'list-showing-time';
+                    }
+                    return { field, type }; 
+                }).filter((value, index) => value);
+
+                let database_id = data['_id'];
+                let table_name = detail.name;
+                let desc =  metadataDesc || detail.name; 
+
+
+                /**
+                 * @desc  创建元数据
+                 */
+                this.create({list_conf, edit_conf, schemas, database_id,  desc, table_name}, callback);
+            
+            });
+        }], callback);
+    }
+
+    /**
+     * @desc 创建一个元数据
+     */
+    create(data, callback) {
+        modelNewMismetadata.create(data, callback);
+        // callback(null, data);
+    }
+}
+
+export default new serviceMetadata;
+
+
+/* eslint-enable */

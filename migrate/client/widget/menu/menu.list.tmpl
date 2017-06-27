@@ -1,0 +1,46 @@
+<%
+/**
+ * @file: menu.list.tmpl
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-02
+ * @description: this is a <tmpl> file
+ */
+%>
+<ul class='list-group dropdown-menu' >
+    <% (function listloop(gap, list){ %>
+        <% $.each( list,function(index,item){ %>
+        <li class='list-group-item gap<%= gap %>' data-detail='<%= JSON.stringify({
+            conds_query:item.conds_query,
+            create_time:item.create_time,
+            desc:item.desc,
+            id:item.id,
+            is_deleted:item.is_deleted,
+            last_modified:item.last_modified,
+            link:item.link,
+            name:item.name,
+            oid:item.oid,
+            parent_id:item.parent_id,
+            show_type:item.show_type,
+            status:item.status
+        }) %>' 
+        <% if(item.is_deleted == true){ %>style='display:none;'<%}%>>
+        <label for='<%= item.id %>'>
+            <%= item.name%> 
+            &nbsp; &nbsp;
+            <%= item.metadata_id%> 
+            &nbsp; &nbsp;
+            <%= item.id %> 
+            &nbsp; &nbsp;
+            <%= item.parent_id %> 
+            <span class="input-group-addon">
+                <input type="radio" name='migrateParentID' id='<%= item.id %>' data-parentId='<%= item.parent_id %>' >
+            </span>
+            <% listloop( gap+1 , item.children)%>
+        </label>
+        </li>
+        <% }) %>
+    <% })(0, data) %> 
+</ul>
+
+
+

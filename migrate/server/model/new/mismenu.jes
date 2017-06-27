@@ -1,0 +1,44 @@
+/**
+ * @file: mismenu.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-27
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import {
+    Menu, Database, Metadata, MenuId
+}
+from '../../lib/linkage';
+class modelNewMismenu {
+
+    /**
+     * @desc 通过old mis id查找是否已经被迁移过
+     */
+    find(oid, callback) {
+        Menu.find({
+            oid
+        }).limit(2).exec(callback);
+    }
+    create(cond, callback) {
+        let menu = new Menu(cond);
+        menu.save(callback);
+    }
+    maxId(callback){
+        Menu.find().sort({id:-1}).limit(1).exec(function(err, data){
+            callback(err, data[0]['id'])
+        });
+    }
+
+    update(cond, rest, callback){
+        Menu.update(cond, rest).exec(callback);
+    }
+    setMenuId(id, callback){
+        // callback(null, {id}) 
+        MenuId.update({'_id':'menu'},{$set:{'len': id}}).exec(callback);
+    }
+
+}
+
+export default new modelNewMismenu;
+
+/* eslint-enable */

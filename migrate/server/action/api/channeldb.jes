@@ -1,0 +1,40 @@
+/**
+ * @file: channeldb.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import * as DB from '../../model/';
+import serviceChanneldb from '../../service/channeldb';
+export function get(req, res) {
+    DB.modelChanneldb.getlist(req.query, function(err, results, fields) {
+        if (err) {
+            res.json(err);
+            return;
+        }
+        if (results && results.length < 1) {
+            res.json({
+                errno: 100041,
+                msg: 'not find db'
+            });
+            return;
+        }
+        // results[0]['db_password'] = undefined;
+        res.json(results);
+    })
+}
+
+export function post(req, res) {
+    let detail = JSON.parse(req.body.detail);
+    serviceChanneldb.migrate(detail, function(err, data) {
+        if (err) {
+            res.json(err);
+            return;
+        }
+        res.json(data);
+    });
+
+}
+
+/* eslint-enable */

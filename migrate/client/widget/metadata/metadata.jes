@@ -1,0 +1,53 @@
+/**
+ * @file: metadata.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+let getmetadata = __inline('./metadata.tmpl');
+
+$('#metadata').on('click', function() {
+    let tableName = $('#tableName').val();
+    if (!tableName) {
+        alert('tableName empty');
+        return;
+    }
+
+    $.ajax({
+        url: '/migrate/api/metadata',
+        type: 'GET',
+        data: {
+            where: 'where name=\'' + tableName + '\' and top_ch_spell=\'video_publish\' and status=\'A\''
+        },
+        dataType: 'JSON',
+        success: function(data) {
+            $('#metadataList').html(getmetadata(data));
+        },
+        error: function() {},
+    })
+});
+$('#metadataList').on('click', '.btn-submit', function(){
+    let detail = $(this).data('detail');
+
+    let metadataName = $('#metadataName').val();
+    $.ajax({
+        url: '/migrate/api/metadata',
+        type: 'post',
+        data: { detail:JSON.stringify(detail), desc: metadataName },
+        dataType: 'JSON',
+        success: function(data) {
+            if(data.errno === 100040){
+                console.log(data.info.db_database, data.info.id);
+                alert(data.msg);
+                return;
+            }
+            alert(data.table_name+'迁移成功')
+        },
+        error: function() {},
+    })
+
+
+});
+/* eslint-enable */

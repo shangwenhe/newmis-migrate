@@ -1,0 +1,41 @@
+/**
+ * @file: mis_metadata.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import mysql from '../../lib/mysql';
+import phpsrlzr from '../../lib/php-srlzr';
+
+class modelMetadata extends mysql {
+    constructor() {
+        super();
+        /**
+         * @desc 元数据
+         */
+        this.table = 'mis_metadata';
+    };
+
+    getlist({fields = '*', where = '', order = '', limit = 'limit 10'}, callback) {
+        this.select({
+            table: this.table,
+            fields,
+            where,
+            order,
+            limit
+        }, function(err, result, fields){
+            callback(err, result.map(function(value, index){
+
+                    value.validate_depency = value.validate_depency && phpsrlzr.deserialize(value.validate_depency.toString());
+                    value.manager_depency = value.manager_depency && phpsrlzr.deserialize(value.manager_depency.toString());
+                    value.display_depency = value.display_depency && phpsrlzr.deserialize(value.display_depency.toString());
+                    value.deliver_depency = value.deliver_depency && phpsrlzr.deserialize(value.deliver_depency.toString());
+                    return value;
+            }), fields);
+        });
+    }
+}
+export default new modelMetadata;
+
+/* eslint-enable */

@@ -1,0 +1,100 @@
+/**
+ * @file: channeldb.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-05-04
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+import * as DB from '../model/';
+import modelNewMisdb from '../model/new/misdb';
+import async from 'async';
+import mysql from 'mysql';
+
+class serviceChanneldb {
+
+    migrate(detail, callback) {
+        async.waterfall([(callback)=>{
+            /**
+             * @desc 验证数据库是否有权限
+             */ 
+            let pool = mysql.createConnection({
+                host: detail.db_host,
+                port: detail.db_port,
+                password: detail.db_password,
+                user: detail.db_user,
+                database: detail.db_database,
+                connectionLimit: 10
+            });
+            pool.connect(function(err, result) {
+                if(err){
+                    callback(Object.assign(err,{
+                        errno: 100400, 
+                        msg: 'connect error, No database permissions'
+                    }))
+                    return;
+                }
+                callback(err, {
+                    host: detail.db_host,
+                    port: detail.db_port,
+                    password: detail.db_password,
+                    username: detail.db_user,
+                    database: detail.db_database,
+                })
+            });
+        },(db, callback)=>{
+
+            let {host, port, password,username, database}  = db;
+            /**
+             * @desc 判断DB是否已经被添加
+             */ 
+            modelNewMisdb.find({ host, port, username }, function(err, result){
+                /**
+                 * @desc 如果数据库已经存在则跳过
+                 */
+                if(err){
+                    callback(err);
+                   return; 
+                }
+
+                if(result && result.length > 0){
+                    err ={
+                        errno: 100042,
+                        msg: 'datadb '+ database +' exist',
+                        info: Object.assign(result,{
+                            db_password: undefined,
+                        })
+                    } 
+                }
+                callback(err, result);
+            });
+        },(data, callback)=>{ 
+            /**
+             * @desc 较验数据是否正确
+             */
+            DB.modelChanneldb.getlist({
+                where: 'where db_host=\'' + detail.db_host + '\' and db_user=\''+detail.db_user+'\' and db_port='+ detail.db_port
+            }, callback);
+
+        },(data, filed, callback)=>{
+            this.create(data[0], callback)
+        }], callback);
+    }
+    create(db, callback){
+        modelNewMisdb.create({
+            host: db.db_host,
+            port: db.db_port,
+            name: db.db_database,
+            desc: db.db_name,
+            username: db.db_user,
+            password: db.db_password,
+            dbname: db.db_database,
+            encode: db.charset,
+            type: 'mysql',
+            oid: db.id
+        }, callback);
+    }
+}
+
+export default new serviceChanneldb;
+/* eslint-enable */

@@ -1,0 +1,270 @@
+/**
+ * @file: block.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-26
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+
+import async from 'async';
+
+
+import modelMetadata from '../model/old/metadata';
+import modelChanneldb from '../model/old/channeldb';
+
+
+/**
+ * misXXXX 为新MIS的模块
+ */
+import modelNewMismenu from '../model/new/mismenu';
+import modelNewMismetadata from '../model/new/mismetadata';
+import modelNewMisdb from '../model/new/misdb';
+
+
+class serviceBlock {
+
+
+    /**
+     * @desc 所要迁移的区块
+     * @param blocks 所有需要迁移的区块
+     */
+    migrate({
+        blocks, parentNode
+    }, callback) {
+        this.parentNode = parentNode;
+        this.ID = parentNode.autoId || 0;
+        this.parseBlock({
+            children: blocks
+        }, this.ID, (err, item) => {
+            
+            if(err){
+                callback(err);
+                return;
+            }
+
+            if(item.children && item.children[0]['parent_id']){
+                item.children[0]['parent_id'] =  this.parentNode.id;
+            } 
+            let menusArr = [];
+            (function loop(item){
+                let children = item.children.map(function(item){
+                    let children = [];
+                    if(item.children.length > 0){
+                        children = item.children.map(function(item){
+                            return item.id; 
+                        });
+                        item.menu.children = loop(item);
+                    }
+                    menusArr.push(Object.assign(item.menu,{
+                        children
+                    }));
+                    return item.menu;
+                })
+                return children;
+            }(item))
+
+
+            async.mapSeries(menusArr, function(item, callback){
+                modelNewMismenu.find(item.oid, (err, result) => {
+                     if (err) {
+                         callback(Object.assign(err, item, {
+                             errno: 100035,
+                             msg: '查找菜单出错'
+                         }));
+                         return;
+                     }
+                     if (result instanceof Array && result.length > 0) {
+                         callback(err, []);
+                         return;
+                     }
+                     modelNewMismenu.create(item, callback);
+                });
+            }, function(err, result){
+                async.waterfall([
+                (callback)=>{
+                    // 添加父子关系
+                    modelNewMismenu.update({
+                        id: parentNode.id
+                    }, {
+                        $addToSet: {
+                            "children": parentNode.autoId + 1
+                        }
+                    }, callback)
+                
+                },(result, callback)=>{
+                    // 取得当前最大的ID 
+                    modelNewMismenu.maxId(callback); 
+                },(result, callback) => {
+                    // 更新表IDS
+                    modelNewMismenu.setMenuId(result ,callback);
+                }
+                    
+                ],callback)
+            });
+
+        });
+    }
+
+    rebuildMenu(item, blocks, callback) {
+        if(item.menu){
+            blocks = item.menu;
+        }
+        blocks.children = []
+        async.mapSeries(item.children, (item, callback) => {
+             if (item.children && item.children.length > 0) {
+                  this.rebuildMenu(item, item.menu,  callback);
+             } else {
+                blocks.children.push( item.menu);
+                callback(null, blocks);
+             }
+
+        }, callback)
+    }
+
+    /**
+     * @desc 解析出数据中的区块
+     */
+    parseBlock(blocks, parent_id, callback) {
+        async.mapSeries(blocks.children, (item, callback) => {
+            let url = item.index_page.match(/([^\/]*)\/mQuery/i);
+            item.metadata = url && url[1] || '';
+            item.parent_id = parent_id;
+            item.oid = item.id;
+            item.id = ++this.ID;
+
+            /**
+             * @desc 查看metdata是否已经存在
+             */
+
+            this.getMenu(item, (err, info) => {
+                if (item.children.length > 0) {
+                    /**
+                     *  @desc 如果item.children.length 长度大于零则进入下一个循环
+                     */
+                    this.parseBlock(item, this.ID, callback);
+                } else {
+                    /**
+                     *  @desc 如果item.children.length 长度小于1则调用callback 结束回调
+                     */
+                    callback(err, item)
+                }
+            })
+        }, (err, result) => {
+            blocks.children = result;
+            callback(err, blocks);
+        });
+    }
+
+    /**
+     * @desc 判断导航是否已经存在
+     */
+    // getMenu(item, callback) {
+    //     /**
+    //      * @desc 查找menu ID是否存在
+    //      */
+    //     modelNewMismenu.find(item.id, (err, result) => {
+    //         if (err) {
+    //             callback(Object.assign(err, item, {
+    //                 errno: 100035,
+    //                 msg: '查找菜单出错'
+    //             }));
+    //             return;
+    //         }
+    //         if (result instanceof Array && result.length > 0) {
+    //             callback(err, item);
+    //             return;
+    //         }
+    //         // 创建菜单
+    //         this.createMenu(item, callback);
+    //     });
+    // }
+
+    /**
+     * @desc  创建菜单前的参数调整
+     */
+    getMenu(item, callback) {
+
+        let diff = {};
+        if (item.metadata) {
+            let query = item.index_page.match(/(block_sign|_order_by|_order_desc)=[^&]*/ig);
+            diff = {
+                /**
+                 * @desc 数据库ID 通过 item.metadata
+                 * @desc 进行查询出来
+                 */
+                metadata_id: '',
+                conds_query: query.join('&'),
+                show_type: 1,
+            };
+        }
+
+        let menu = Object.assign({
+            name: item.priv_name,
+            status: item.is_display,
+            link: '',
+            desc: '',
+            show_type: 0,
+            /**
+             * @desc 联合查询的query
+             */
+            conds_query: '',
+        }, diff, {
+            parent_id: item.parent_id,
+            oid: item.oid,
+            id: item.id
+        });
+        item.menu = menu;
+        if (!item.metadata) {
+            /**
+             * 创建链接导航
+             */
+            callback(null, item);
+            return;
+        }
+        this.getMetadata(item, function(err, item) {
+            callback(err, item);
+        });
+    }
+
+
+    /**
+     * @desc 取得metadata 如果不存在则创建如果已经存在则跳过
+     */
+    getMetadata(item, callback) {
+        modelNewMismetadata.find(item.metadata, (err, result) => {
+            if (err) {
+                callback(Object.assign(err, item, {
+                    errno: 100034,
+                    msg: '从新的MIS中取出metadata失败'
+                }));
+                return;
+            }
+            /**
+             * @desc metadata已经在新MIS存在
+             */
+            if (result instanceof Array && result.length > 0) {
+                item.menu.metadata_id = result[0]['_id'];
+                item.metainfo = result[0];
+                callback(err, item);
+                return;
+            }
+
+            /**
+             * @desc 元数据不存在
+             * @desc 从旧的MIS取出metadata数据
+             */
+            callback({
+                errno: 100034,
+                msg: item.metadata + ' metadata not find'
+            });
+        })
+    }
+}
+
+export default new serviceBlock;
+
+
+/* eslint-enable */

@@ -1,0 +1,44 @@
+<%
+/**
+ * @file: search.list.tmpl
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <tmpl> file
+ */
+%>
+<ul class='list-group list-for-old-mis' data-detail='<%= JSON.stringify(data) %>'>
+    
+        <li class='list-group-item'>
+        <label for='selectall'>
+            全选全选
+            <span class="input-group-addon">
+                <input type="checkbox" id='selectall' >
+            </span>
+        </label>
+        </li>
+    <% (function listloop(gap, list){ %>
+        <% $.each( list,function(index,item){ %>
+        <li class='list-group-item gap<%= gap %>' <% if(item.is_display == 0){ %>style='display:none;'<%}%>>
+        <label for='<%= item.id %>'>
+            <%= item.priv_name%> 
+            &nbsp; &nbsp;
+            <%= item.priv_spell%> 
+            &nbsp; &nbsp;
+            <%= item.id %> 
+            &nbsp; &nbsp;
+            <%= item.parent_id %> 
+            <span class="input-group-addon">
+                <input type="checkbox" id='<%= item.id %>' data-parentId='<%= item.parent_id %>' >
+            </span>
+            <% listloop( gap+1 , item.children)%>
+        </label>
+        </li>
+        <% }) %>
+    <% })(0, data) %> 
+    <li class='list-group-item'>
+        <div class="btn-group">
+            <button type="button" id='submit' class="btn btn-default">确认迁移</button>
+        </div>
+    </li>
+</ul>
+

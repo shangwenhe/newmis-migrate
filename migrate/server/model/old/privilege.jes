@@ -1,0 +1,29 @@
+/**
+ * @file: privilege.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-04-25
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import mysql from '../../lib/mysql';
+class modelPrivilege extends mysql {
+    constructor() {
+        super();
+        /**
+         * @desc 顶级菜单
+         */
+        this.table = 'cms_privilege';
+    }
+    getlist({fields = '*', where = '', order = '', limit = 'limit 10'}, callback) {
+        this.select({
+            table: this.table,
+            fields,
+            where,
+            order,
+            limit
+        }, callback)
+    }
+}
+
+export default new modelPrivilege;
+/* eslint-enable */
