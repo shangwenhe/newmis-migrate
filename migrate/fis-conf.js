@@ -24,13 +24,6 @@ fis.match('**.jes', {
     rExt: 'js'
 });
 
-// fis.match('**.jes', {
-//     parser: fis.plugin('typescript', {
-//         module: 1,
-//         target: 2
-//     }),
-//     rExt: 'js'
-// });
 
 fis.match('**.tmpl', {
     parser: fis.plugin('utc', {
