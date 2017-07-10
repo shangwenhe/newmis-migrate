@@ -8,6 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "yog2 release --fis3 -d ./output && cd output &&  tar zcvf ./migrate.tar.gz ./*"
   },
-  "author": "",
+  "author": "shangwenhe@itv.baidu.com",
   "license": "ISC"
 }
